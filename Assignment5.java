@@ -16,6 +16,7 @@ public class Assignment5
     {
         int k;
         Icon tempIcon;
+        GUICard guiCard = new GUICard();
 
         // establish main frame in which program will run
         CardTable myCardTable
@@ -33,7 +34,8 @@ public class Assignment5
             computerLabels[i] = new JLabel();
             computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
             humanLabels[i] = new JLabel();
-            humanLabels[i].setIcon(new ImageIcon("images/AS.gif")); ;
+            //humanLabels[i].setIcon(new ImageIcon("images/AS.gif"));
+            humanLabels[i].setIcon(guiCard.getIcon(randomCardGenerator()));
         }
 
         // ADD LABELS TO PANELS -----------------------------------------
@@ -51,8 +53,12 @@ public class Assignment5
         JLabel computerLabel = new JLabel( "Computer", JLabel.CENTER );
         JLabel playerCardLabel = new JLabel( "", JLabel.CENTER );
         JLabel computerCardLabel = new JLabel( "", JLabel.CENTER );
-        playerCardLabel.setIcon(new ImageIcon("images/BK.gif"));
-        computerCardLabel.setIcon(new ImageIcon("images/BK.gif"));
+
+        playerCardLabel.setIcon(guiCard.getIcon(randomCardGenerator()));
+        computerCardLabel.setIcon(guiCard.getBackCardIcon());
+
+        //playerCardLabel.setIcon(new ImageIcon("images/BK.gif"));
+        //computerCardLabel.setIcon(new ImageIcon("images/BK.gif"));
 
         // and two random cards in the play region (simulating a computer/hum ply)
         //code goes here ...
@@ -63,6 +69,17 @@ public class Assignment5
 
         // show everything to the user
         myCardTable.setVisible(true);
+    }
+
+    static Card randomCardGenerator()
+    {
+        char[] values = new char[]
+                {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'A', 'K', 'Q', 'J'};
+        int value = new Random().nextInt(values.length);
+        Random random = new Random();
+        Card card = new Card(values[value],Card.Suit.values()[random.nextInt(Card.Suit.values().length)]);
+
+        return card;
     }
 }
 
@@ -129,19 +146,145 @@ class GUICard
     private static Icon iconBack;
     static boolean iconsLoaded = false;
 
+    public GUICard()
+    {
+        if (!iconsLoaded)
+        {
+            loadCardIcons();
+        }
+    }
+
     static void loadCardIcons()
     {
+        String path = new String();
+        int i = 0;
 
+        for (int j = 0; j < 4; j++) {
+            for (int k = 0; k < 14; k++) {
+                path += "images/" + turnIntIntoCardValue(k) + turnIntIntoCardSuit(j) + ".gif";
+                iconCards[k][j] = new ImageIcon(path);
+                path = "";
+            }
+        }
+
+        iconBack = new ImageIcon("images/BK.gif");
+        iconsLoaded = true;
+    }
+
+    // turns 0 - 13 into "A", "2", "3", ... "Q", "K", "X"
+    static String turnIntIntoCardValue(int k)
+    {
+        switch (k)
+        {
+            case 0:
+                return "A";
+            case 1:
+                return "X";
+            case 2:
+                return "2";
+            case 3:
+                return "3";
+            case 4:
+                return "4";
+            case 5:
+                return "5";
+            case 6:
+                return "6";
+            case 7:
+                return "7";
+            case 8:
+                return "8";
+            case 9:
+                return "9";
+            case 10:
+                return "T";
+            case 11:
+                return "J";
+            case 12:
+                return "Q";
+            case 13:
+                return "K";
+        }
+        return "E";
+    }
+
+    // turns 0 - 3 into "C", "D", "H", "S"
+    static String turnIntIntoCardSuit(int j)
+    {
+        switch (j)
+        {
+            case 0:
+                return "C";
+            case 1:
+                return "D";
+            case 2:
+                return "H";
+            case 3:
+                return "S";
+        }
+        return "E";
+    }
+
+    static private int valueAsInt(Card card)
+    {
+        char value = card.getValue();
+        switch (value)
+        {
+            case '1':
+                return 'X';
+            case '0':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                return Integer.parseInt(String.valueOf(value));
+            case 'T':
+                return 10;
+            case 'J':
+                return 11;
+            case 'Q':
+                return 12;
+            case 'K':
+                return 13;
+            default:
+                return 0;
+        }
+    }
+
+    static private int suitAsInt(Card card)
+    {
+        Card.Suit suit = card.getSuit();
+
+        switch (suit)
+        {
+            case clubs:
+                return 0;
+            case diamonds:
+                return 1;
+            case hearts:
+                return 2;
+            case spades:
+                return 3;
+            default:
+                return 0;
+        }
     }
 
     static public Icon getIcon(Card card)
     {
-        return new ImageIcon();
+        System.out.println("Card: " + card + " valueAsInt: " + valueAsInt(card) +
+            " suitAsInt: " + suitAsInt(card));
+        return iconCards[valueAsInt(card)][suitAsInt(card)];
+        //return new ImageIcon();
     }
 
     static public Icon getBackCardIcon()
     {
-        return new ImageIcon("");
+        return iconBack;
     }
 }
 
