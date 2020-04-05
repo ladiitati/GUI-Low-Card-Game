@@ -21,17 +21,17 @@ public class Assignment5
         Deck deck = new Deck(1);
         Hand hand = new Hand();
 
-        for (int j = 0; j < 56; j++) {
-            hand.takeCard(deck.dealCard());
-        }
+        // for (int j = 0; j < 56; j++) {
+        //     hand.takeCard(deck.dealCard());
+        // }
         
         System.out.println(hand.toString());
 
         hand.sort();
 
         //testing remove card
-        //Card testRemove = new Card('4', Suit.diamonds);
-        deck.removeCard(new Card('4', Suit.diamonds));
+        Card testRemove = new Card('6', Suit.hearts);
+        deck.removeCard(testRemove);
     }
     public static void testDeck() {
         System.out.println("\nPrinting out double deck in-order:");
@@ -497,21 +497,31 @@ class Deck {
     public boolean removeCard(Card card){
         System.out.println("\n");
         System.out.println(card);
+        for(Card cardss: cards){
+            System.out.println(cardss);
+        }
         for (int i = 0; i < cards.length; i++) {
             System.out.println("inside 1st loop");
-            System.out.println("cards[i] = " + cards[i]);
+            System.out.println("cards[i] = i = " + i  + " "  + cards[i]);
             if (cards[i].equals(card)) {
                 System.out.println("inside 2nd loop");
-                cards[i] = cards[topCard--];
-
+                System.out.println("cards[i] = i = " + i  + " "  + cards[i]);
+                System.out.println("topCard = " + topCard);
+                System.out.println("topCard value = " + cards[topCard - 1]);
+                cards[i] = cards[topCard - 1];
+                
+                topCard--;
                 for(Card cardss: cards){
                     System.out.println(cardss);
                 }
+                System.out.println("cards[i] = i = " + i  + " "  + cards[i]);
+                System.out.println("topCard = " + topCard);
                 return true;
             }
         }
         return false;
     }
+    
 
     public void sort() {
         Card.arraySort(cards, topCard + 1);
