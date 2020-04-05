@@ -18,13 +18,9 @@ public class Assignment5
 
     public static void main(String[] args){
 
-        System.out.println("test");
-        // Card card = new Card();
-        // card.arraySort();
         Deck deck = new Deck(1);
         Hand hand = new Hand();
 
-        int deckSize = deck.getTopCard();
         for (int j = 0; j < 56; j++) {
             hand.takeCard(deck.dealCard());
         }
@@ -32,10 +28,10 @@ public class Assignment5
         System.out.println(hand.toString());
 
         hand.sort();
-        // Card cardt = new Card();
-        // cardt.arraySort(hand.myCards[], 56);
-        // System.out.print("\n");
 
+        //testing remove card
+        //Card testRemove = new Card('4', Suit.diamonds);
+        deck.removeCard(new Card('4', Suit.diamonds));
     }
     public static void testDeck() {
         System.out.println("\nPrinting out double deck in-order:");
@@ -284,20 +280,11 @@ class Card {
     }
 
     static void arraySort(Card[] cards, int arraySize){
-   // static void arraySort(){
         Card temp;
-       // int temp = 0;
-       // int[] array = {12,34,1,3,6,23,9,10}; 
 
         for (int i = 0; i < arraySize; i++){
             for (int j = 0; j < arraySize -1; j++){
-                // for(char valueRank: valueRanks){
-                //     if(cards[j] > cards[j+1]){
-                //         temp = array[j];
-                //         cards[j] = cards[j+1];
-                //         cards[j+1] = temp;
-                //     }
-                // }
+
                 for(char valueRank: valueRanks){
                     if(cards[j].getValue() == valueRank){
                         temp = cards[j];
@@ -508,9 +495,18 @@ class Deck {
     }
 
     public boolean removeCard(Card card){
+        System.out.println("\n");
+        System.out.println(card);
         for (int i = 0; i < cards.length; i++) {
+            System.out.println("inside 1st loop");
+            System.out.println("cards[i] = " + cards[i]);
             if (cards[i].equals(card)) {
+                System.out.println("inside 2nd loop");
                 cards[i] = cards[topCard--];
+
+                for(Card cardss: cards){
+                    System.out.println(cardss);
+                }
                 return true;
             }
         }
