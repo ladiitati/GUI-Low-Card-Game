@@ -2,6 +2,8 @@ import java.awt.*;
 import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
 
 public class Assignment5 {
     static int NUM_CARDS_PER_HAND = 7;
@@ -35,37 +37,33 @@ public class Assignment5 {
         myCardTable.setLocationRelativeTo(null);
         myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // show everything to the user
-        myCardTable.setVisible(true);
-
-        // CREATE LABELS ----------------------------------------------------
-        for (int i = 0; i < myCardTable.getNumCardsPerHand(); i++) {
-            computerLabels[i] = new JLabel();
-            computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
-            humanLabels[i] = new JLabel();
-            // humanLabels[i].setIcon(new ImageIcon("images/AS.gif"));
-            humanLabels[i].setIcon(guiCard.getIcon(playerHand.inspectCard(i)));
-        }
-
-        // ADD LABELS TO PANELS -----------------------------------------
-        // myCardTable.add
-        for (int i = 0; i < myCardTable.getNumCardsPerHand(); i++) {
-            myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
-        }
-
-        for (int i = 0; i < myCardTable.getNumCardsPerHand(); i++) {
-            myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
-        }
         JLabel playerLabel = new JLabel("Player", JLabel.CENTER);
         JLabel computerLabel = new JLabel("Computer", JLabel.CENTER);
         JLabel playerCardLabel = new JLabel("", JLabel.CENTER);
         JLabel computerCardLabel = new JLabel("", JLabel.CENTER);
 
-        playerCardLabel.setIcon(guiCard.getIcon(playerHand.inspectCard(0))); // the played player card
-        computerCardLabel.setIcon(guiCard.getBackCardIcon()); // the played computer card
+        // CREATE LABELS AND ADD TO PANELS ----------------------------------------------------
+        for (int i = 0; i < myCardTable.getNumCardsPerHand(); i++) {
+            final int handIndex = i;
+            computerLabels[i] = new JLabel();
+            computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
+            myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
 
-        // playerCardLabel.setIcon(new ImageIcon("images/BK.gif"));
-        // computerCardLabel.setIcon(new ImageIcon("images/BK.gif"));
+            humanLabels[i] = new JLabel();
+            humanLabels[i].setIcon(GUICard.getIcon(playerHand.inspectCard(i)));
+            myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
+
+            humanLabels[i].addMouseListener(new MouseInputAdapter() {
+                @Override
+                public void mousePressed(MouseEvent click) {
+                    System.out.println("label" +  handIndex + " was clicked");
+                    playerCardLabel.setIcon(guiCard.getIcon(playerHand.inspectCard(handIndex)));
+                }
+            });
+        }
+
+        // playerCardLabel.setIcon(guiCard.getIcon(playerHand.inspectCard(0))); // the played player card
+        // computerCardLabel.setIcon(guiCard.getBackCardIcon()); // the played computer card
 
         // and two random cards in the play region (simulating a computer/hum ply)
         // code goes here ...
@@ -89,6 +87,10 @@ public class Assignment5 {
 }
 
 class CardTable extends JFrame {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     static int MAX_CARDS_PER_HAND = 56;
     static int MAX_PLAYERS = 2; // for now, we only allow 2 person games
 
