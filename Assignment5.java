@@ -6,8 +6,8 @@ public class Assignment5 {
     public static void main(String[] args) {
         Deck deck = new Deck(1);
         
-        //test sort
-     /*   Hand hand = new Hand();
+        //test arraySort
+      /*  Hand hand = new Hand();
 
         for (int j = 0; j < 56; j++) {
             hand.takeCard(deck.dealCard());
@@ -16,115 +16,29 @@ public class Assignment5 {
        System.out.println(hand.toString());
 
        hand.sort();*/
-        //testing add card
-        Card testRemove = new Card('6', Suit.hearts);
-        deck.removeCard(testRemove);
 
-        //testing add card
-       Card testAdd = new Card('6', Suit.hearts);
-        deck.addCard(testAdd);
-        Card testAdd2 = new Card('7', Suit.hearts);
-        deck.addCard(testAdd2);
+        //Test randomCardGenerator()
+        System.out.println("TEST randomCardGenerator()");
+        Card testCard = randomCardGenerator();
+        System.out.println(testCard);
+
+        //Test removeCard
+        deck.removeCard(testCard);
+
+        //Test addCard
+        deck.addCard(testCard);
+
     }
- /*   public static void main(String[] args) {
+    //returns a random generated card
+    static Card randomCardGenerator() {
+        char[] values = new char[]
+                {'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'X'};
+        int value = new Random().nextInt(values.length);
+        Random random = new Random();
+        Card card = new Card(values[value],Suit.values()[random.nextInt(Suit.values().length)]);
 
-        Scanner scannerObject = new Scanner(System.in);
-        testDeck();
-        int numOfPlayers = 0;
-        //takes users input
-        do {
-            System.out.println("Enter how many players (1 - 10):");
-            numOfPlayers = scannerObject.nextInt();
-
-        } while (numOfPlayers < 1 || numOfPlayers > 10);
-
-        scannerObject.close();
-
-        System.out.println("Number of players: " + numOfPlayers + "\n");
-
-        Deck deck = new Deck(1);
-
-        Hand[] playersHand = new Hand[numOfPlayers];
-        //instantiate players hands
-        for (int i = 0; i < numOfPlayers; i++) {
-            playersHand[i] = new Hand();
-        }
-
-        int deckSize = deck.getTopCard();
-
-        //deals players card, print hands and resets them twice
-        for (int dealLoop = 0; dealLoop < 2; dealLoop++) {
-
-            //deals cards to player
-            int counter = 0;
-
-            while (counter < deckSize) {
-                for (int j = 0; j < numOfPlayers; j++) {
-                    playersHand[j].takeCard(deck.dealCard());
-                    if (++counter == deckSize) {
-                        j = numOfPlayers;
-                    }
-                }
-            }
-
-            //prints out players hand and resets them
-            if (dealLoop == 0) {
-                System.out.println("Here are the hands from an unshuffled deck:");
-            } else {
-                System.out.println("Here are the hands from a SHUFFLED deck:");
-            }
-
-            for (int i = 0; i < numOfPlayers; i++) {
-                System.out.print(playersHand[i].toString() + "\n");
-                playersHand[i].resetHand();
-            }
-            //Reset deck for shuffle
-            deck = new Deck(1);
-            deck.shuffle();
-        }
-    }*/
-
-    //Deck test function from Phase 3
-    public static void testDeck() {
-        System.out.println("\nPrinting out double deck in-order:");
-        //Declare deck with a size of two packs and output cards
-        Deck testingDeck = new Deck(2);
-        int testingDeckSize = testingDeck.getTopCard();
-        for (int i = 0; i < testingDeckSize; i++) {
-            Card outputCard = testingDeck.dealCard();
-            System.out.print(outputCard.toString() + " / ");
-        }
-        System.out.println("\nDouble deck deal complete.");
-        System.out.println("Let's reset and shuffle.");
-        //Reset the deck and shuffle, then output cards
-        testingDeck = new Deck(2);
-        testingDeck.shuffle();
-        for (int i = 0; i < testingDeckSize; i++) {
-            Card outputCard = testingDeck.dealCard();
-            System.out.print(outputCard.toString() + " / ");
-        }
-        System.out.println("\nShuffled double deck deal complete.");
-
-        System.out.println("\nPrinting out single deck in-order:");
-        //Declare deck with a size of one pack and output cards
-        testingDeck = new Deck(1);
-        testingDeckSize = testingDeck.getTopCard();
-        for (int i = 0; i < testingDeckSize; i++) {
-            Card outputCard = testingDeck.dealCard();
-            System.out.print(outputCard.toString() + " / ");
-        }
-        System.out.println("\nSingle deck deal complete.");
-        System.out.println("Let's reset and shuffle.");
-        //Reset the deck and shuffle, then output cards
-        testingDeck = new Deck(1);
-        testingDeck.shuffle();
-        for (int i = 0; i < testingDeckSize; i++) {
-            Card outputCard = testingDeck.dealCard();
-            System.out.print(outputCard.toString() + " / ");
-        }
-        System.out.println("\nShuffled single deck deal complete.\n");
+        return card;
     }
-
 }
 
 enum Suit {clubs, diamonds, hearts, spades}
@@ -199,6 +113,7 @@ class Card {
         return false;
     }
 
+    //will sort the incoming array of cards using a bubble sort routine
     static void arraySort(Card[] cards, int arraySize){
         Card temp;
 
@@ -409,9 +324,9 @@ class Deck {
         return card;
     }
 
+    //Add a card to the deck and reassigns top card
     public boolean addCard(Card card){
         int numOfInstance = 0;
-
 
         //check number of card instances
         for (int i = 0; i < cards.length-1; i++){
@@ -419,23 +334,45 @@ class Deck {
                 numOfInstance ++;
             }
         }
-        if(numOfInstance > numPacks ){
+        if(numPacks > numOfInstance ){
             return false;
         }
 
-           // Card temp = card;
         if (cards.length >= topCard) {
             topCard++;
             cards[topCard-1] = card;
+            /****************
+                TEST PRINT
+             *****************/
+            System.out.println("\n");
+                System.out.println("ADD TEST");
+            for(Card cardPrint : cards){
+                System.out.println(cardPrint);
+            }
             return true;
         }
         return false;
     }
 
+    //Removes a card from a deck and reassign top card
     public boolean removeCard(Card card){
         Card temp;
+        int numOfInstance = 0;
 
+        //counts the number of instances of a card
+        for (int i = 0; i < cards.length-1; i++){
+            if (cards[i].equals(card)){
+                numOfInstance ++;
+            }
+        }
+        //returns false if the card isnt found in the deck
+        if(numOfInstance == 0 ){
+            return false;
+        }
+
+        //removes card from deck and reassign topCard
         for (int i = 0; i < cards.length; i++) {
+
             if (cards[i].equals(card)) {
                 for(int j = i; j < cards.length-1; j++){
                     temp = cards[j];
@@ -444,18 +381,27 @@ class Deck {
                 }
               cards[topCard-1] = null;
               topCard--;
-
+                /****************
+                    TEST PRINT
+                *****************/
+                System.out.println("\n");
+                System.out.println("REMOVE TEST");
+                for(Card cardPrint : cards){
+                    System.out.println(cardPrint);
+                }
                 return true;
             }
         }
+
         return false;
     }
     
-
+    //put all of the cards in the deck back into the right order according to their values
     public void sort() {
         Card.arraySort(cards, topCard + 1);
     }
 
+    //return the number of cards remaining in the deck
     public int getNumCards() {
         return topCard;
     }
@@ -481,4 +427,3 @@ class Deck {
 
     }
 }
-
