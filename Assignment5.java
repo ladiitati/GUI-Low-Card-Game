@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.Thread;
 
 public class Assignment5 {
     static int NUM_CARDS_PER_HAND = 7;
@@ -18,17 +19,27 @@ public class Assignment5 {
         int numJokersPerPack = 2;
         int numUnusedCardsPerPack = 0;
         Card[] unusedCardsPerPack = null;
+        ScoreCard scoreCard = new ScoreCard();
 
         CardGameFramework LowCardGame = new CardGameFramework(numPacksPerDeck, numJokersPerPack, numUnusedCardsPerPack,
                 unusedCardsPerPack, NUM_PLAYERS, NUM_CARDS_PER_HAND);
         LowCardGame.deal();
+        renderBoard(LowCardGame, scoreCard);
+    }
+
+    static Card randomCardGenerator() {
+        char[] values = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'A', 'K', 'Q', 'J' };
+        int value = new Random().nextInt(values.length);
+        Random random = new Random();
+        Card card = new Card(values[value], Suit.values()[random.nextInt(Suit.values().length)]);
+
+        return card;
+    }
+
+    public static void renderBoard(CardGameFramework LowCardGame, ScoreCard scoreCard) {
         Hand playerHand = LowCardGame.getHand(0);
         Hand computerHand = LowCardGame.getHand(1);
-        System.out.println(playerHand.toString());
-        System.out.println(computerHand.toString());
 
-        int k;
-        Icon tempIcon;
         GUICard guiCard = new GUICard();
 
         // establish main frame in which program will run
@@ -42,28 +53,53 @@ public class Assignment5 {
         JLabel playerCardLabel = new JLabel("", JLabel.CENTER);
         JLabel computerCardLabel = new JLabel("", JLabel.CENTER);
 
-        // CREATE LABELS AND ADD TO PANELS ----------------------------------------------------
-        for (int i = 0; i < myCardTable.getNumCardsPerHand(); i++) {
+        // CREATE LABELS AND ADD TO PANELS
+        // ----------------------------------------------------
+        for (int i = 0; i < playerHand.getNumCards(); i++) {
             final int handIndex = i;
             computerLabels[i] = new JLabel();
-            computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
+            computerLabels[i].setIcon(new ImageIcon("images/BK.gif")); // computer card backs
             myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
 
             humanLabels[i] = new JLabel();
+            // set the icon for player card
             humanLabels[i].setIcon(GUICard.getIcon(playerHand.inspectCard(i)));
             myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
 
+            // event listener to handle player clicking on a card
             humanLabels[i].addMouseListener(new MouseInputAdapter() {
                 @Override
                 public void mousePressed(MouseEvent click) {
-                    System.out.println("label" +  handIndex + " was clicked");
-                    playerCardLabel.setIcon(guiCard.getIcon(playerHand.inspectCard(handIndex)));
+                    // lookup the current card and set it in the GUI
+                    playerCardLabel.setIcon(GUICard.getIcon(playerHand.inspectCard(handIndex)));
+
+                    int computerCardIndex = findLowestComputerCard(computerHand, computerCardLabel);
+
+                    // determine who had the lower card
+                    boolean playerWins = playRound(LowCardGame.playCard(0, handIndex),
+                            LowCardGame.playCard(1, computerCardIndex));
+                    // update the scorecard according to the result of the round
+                    if (playerWins) {
+                        scoreCard.setPlayerScore(scoreCard.getPlayerScore() + 1);
+                        System.out.println("You win! Current score is " + scoreCard.getCurrentScore());
+                    } else {
+                        scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
+                        System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
+                    }
+
+                    myCardTable.addMouseListener(new MouseInputAdapter() {
+                        @Override
+                        public void mousePressed(MouseEvent click) {
+                            // draw new cards and reset the board
+                            LowCardGame.takeCard(0);
+                            LowCardGame.takeCard(1);
+                            LowCardGame.sortHands();
+                            renderBoard(LowCardGame, scoreCard);
+                        }
+                    });
                 }
             });
         }
-
-        // playerCardLabel.setIcon(guiCard.getIcon(playerHand.inspectCard(0))); // the played player card
-        // computerCardLabel.setIcon(guiCard.getBackCardIcon()); // the played computer card
 
         // and two random cards in the play region (simulating a computer/hum ply)
         // code goes here ...
@@ -76,21 +112,72 @@ public class Assignment5 {
         myCardTable.setVisible(true);
     }
 
-    static Card randomCardGenerator() {
-        char[] values = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'A', 'K', 'Q', 'J' };
-        int value = new Random().nextInt(values.length);
-        Random random = new Random();
-        Card card = new Card(values[value], Suit.values()[random.nextInt(Suit.values().length)]);
+    // reset board - add new cards to each hand
+    public static void resetGame() {
 
-        return card;
+    }
+
+    public static boolean playRound(Card playerCard, Card computerCard) {
+        return playerCard.getValue() < computerCard.getValue();
+    }
+
+    // find the lowest card in the computer's hand
+    public static int findLowestComputerCard(Hand computerHand, JLabel computerCardLabel) {
+        Card lowestCard = computerHand.inspectCard(0);
+        int lowestCardIndex = 0;
+        int handSize = computerHand.getNumCards();
+
+        for (int i = 1; i < handSize; i++) {
+            Card currentCard = computerHand.inspectCard(i);
+
+            if (lowestCard.getValue() > currentCard.getValue()) {
+                lowestCard = currentCard;
+                lowestCardIndex = i;
+            }
+        }
+
+        setComputerCard(lowestCard, computerCardLabel);
+        return lowestCardIndex;
+    }
+
+    // set the computer's chosen card on the board
+    public static void setComputerCard(Card computerCard, JLabel computerCardLabel) {
+        computerCardLabel.setIcon(GUICard.getIcon(computerCard));
+    }
+}
+
+// class for tracking player and computer scores
+class ScoreCard {
+    private int playerScore;
+    private int computerScore;
+
+    public ScoreCard() {
+        this.setPlayerScore(0);
+        this.setComputerScore(0);
+    }
+
+    public String getCurrentScore() {
+        return "Player: " + this.getPlayerScore() + " Computer: " + this.getComputerScore();
+    }
+
+    public void setPlayerScore(int newScore) {
+        this.playerScore = newScore;
+    }
+
+    public int getPlayerScore() {
+        return this.playerScore;
+    }
+
+    public void setComputerScore(int newScore) {
+        this.computerScore = newScore;
+    }
+
+    public int getComputerScore() {
+        return this.computerScore;
     }
 }
 
 class CardTable extends JFrame {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
     static int MAX_CARDS_PER_HAND = 56;
     static int MAX_PLAYERS = 2; // for now, we only allow 2 person games
 
@@ -265,9 +352,7 @@ class GUICard {
     }
 
     static public Icon getIcon(Card card) {
-        System.out.println("Card: " + card + " valueAsInt: " + valueAsInt(card) + " suitAsInt: " + suitAsInt(card));
         return iconCards[valueAsInt(card)][suitAsInt(card)];
-        // return new ImageIcon();
     }
 
     static public Icon getBackCardIcon() {
@@ -364,11 +449,6 @@ class Card {
                 }
             }
         }
-
-        for (int p = 0; p < arraySize; p++) {
-            System.out.print(cards[p] + ", ");
-        }
-
     }
 }
 
@@ -397,6 +477,25 @@ class Hand {
             numCards++;
             return true;
         }
+    }
+
+    public Card playCard(int cardIndex) {
+        if (numCards == 0) // error
+        {
+            // Creates a card that does not work
+            return new Card('M', Suit.spades);
+        }
+        // Decreases numCards.
+        Card card = myCards[cardIndex];
+
+        numCards--;
+        for (int i = cardIndex; i < numCards; i++) {
+            myCards[i] = myCards[i + 1];
+        }
+
+        myCards[numCards] = null;
+
+        return card;
     }
 
     public Card playCard() {
@@ -446,25 +545,6 @@ class Hand {
 
     public void sort() {
         Card.arraySort(myCards, numCards);
-    }
-
-    public Card playCard(int cardIndex) {
-        if (numCards == 0) // error
-        {
-            // Creates a card that does not work
-            return new Card('M', Suit.spades);
-        }
-        // Decreases numCards.
-        Card card = myCards[cardIndex];
-
-        numCards--;
-        for (int i = cardIndex; i < numCards; i++) {
-            myCards[i] = myCards[i + 1];
-        }
-
-        myCards[numCards] = null;
-
-        return card;
     }
 }
 
@@ -561,27 +641,13 @@ class Deck {
     }
 
     public boolean removeCard(Card card) {
-        System.out.println("\n");
-        System.out.println(card);
         for (Card cardss : cards) {
-            System.out.println(cardss);
         }
         for (int i = 0; i < cards.length; i++) {
-            System.out.println("inside 1st loop");
-            System.out.println("cards[i] = i = " + i + " " + cards[i]);
             if (cards[i].equals(card)) {
-                System.out.println("inside 2nd loop");
-                System.out.println("cards[i] = i = " + i + " " + cards[i]);
-                System.out.println("topCard = " + topCard);
-                System.out.println("topCard value = " + cards[topCard - 1]);
                 cards[i] = cards[topCard - 1];
 
                 topCard--;
-                for (Card cardss : cards) {
-                    System.out.println(cardss);
-                }
-                System.out.println("cards[i] = i = " + i + " " + cards[i]);
-                System.out.println("topCard = " + topCard);
                 return true;
             }
         }
