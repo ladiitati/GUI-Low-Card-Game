@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.Thread;
+import javax.swing.BoxLayout;
 
 public class Assignment5 {
     static int NUM_CARDS_PER_HAND = 7;
@@ -96,7 +96,6 @@ public class Assignment5 {
         myCardTable.pnlPlayArea.add(playerLabel);
         myCardTable.pnlPlayArea.add(computerLabel);
 
-        myCardTable.pack();
         // show everything to the user
         myCardTable.setVisible(true);
     }
@@ -110,7 +109,8 @@ public class Assignment5 {
         return card;
     }
 
-    public static void renderHand(Hand playerHand, JLabel[] humanLabels, JLabel[] computerLabels, CardTable myCardTable) {
+    public static void renderHand(Hand playerHand, JLabel[] humanLabels, JLabel[] computerLabels,
+            CardTable myCardTable) {
         computerLabels = new JLabel[NUM_CARDS_PER_HAND];
         humanLabels = new JLabel[NUM_CARDS_PER_HAND];
 
@@ -217,7 +217,6 @@ class CardTable extends JFrame {
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
         GridLayout playAreaLayout = new GridLayout(2, 2);
-        GridLayout mainLayout = new GridLayout(3, 1);
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
@@ -227,7 +226,13 @@ class CardTable extends JFrame {
         pnlHumanHand.setBorder(playerBorderTitle);
         pnlComputerHand.setBorder(computerBorderTitle);
 
-        this.setLayout(mainLayout);
+        this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+
+        pnlComputerHand.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnlComputerHand.setPreferredSize(new Dimension(50, 80));
+
+        pnlHumanHand.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnlHumanHand.setPreferredSize(new Dimension(50, 80));
 
         this.add(pnlComputerHand);
         this.add(pnlPlayArea);
@@ -327,6 +332,7 @@ class GUICard {
             case '1':
                 return 'X';
             case '0':
+                return 'A';
             case '2':
             case '3':
             case '4':
