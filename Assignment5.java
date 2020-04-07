@@ -75,19 +75,19 @@ public class Assignment5 {
                         scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
                     }
-                    // renderHand(playerHand, humanLabels, computerLabels, myCardTable);
-
-                    myCardTable.addMouseListener(new MouseInputAdapter() {
-                        @Override
-                        public void mousePressed(MouseEvent click) {
-                            // draw new cards and reset the board
-                            LowCardGame.takeCard(0);
-                            LowCardGame.takeCard(1);
-                        }
-                    });
                 }
             });
         }
+
+        myCardTable.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mousePressed(MouseEvent click) {
+                // draw new cards and reset player hands
+                LowCardGame.takeCard(0);
+                LowCardGame.takeCard(1);
+                renderHand(playerHand, computerHand, humanLabels, computerLabels, myCardTable);
+            }
+        });
 
         // and two random cards in the play region (simulating a computer/hum ply)
         // code goes here ...
@@ -109,19 +109,19 @@ public class Assignment5 {
         return card;
     }
 
-    public static void renderHand(Hand playerHand, JLabel[] humanLabels, JLabel[] computerLabels,
+    public static void renderHand(Hand playerHand, Hand computerHand, JLabel[] humanLabels, JLabel[] computerLabels,
             CardTable myCardTable) {
-        computerLabels = new JLabel[NUM_CARDS_PER_HAND];
-        humanLabels = new JLabel[NUM_CARDS_PER_HAND];
+        myCardTable.pnlHumanHand.removeAll();
+        myCardTable.pnlHumanHand.revalidate();
+        myCardTable.pnlComputerHand.removeAll();
+        myCardTable.pnlComputerHand.revalidate();
 
         for (int i = 0; i < playerHand.getNumCards(); i++) {
-            System.out.println(playerHand.inspectCard(i).toString());
-            computerLabels[i] = new JLabel();
             computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
             myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
 
-            humanLabels[i] = new JLabel();
             // set the icon for player card
+            humanLabels[i].setIcon(null);
             humanLabels[i].setIcon(GUICard.getIcon(playerHand.inspectCard(i)));
             myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
         }
