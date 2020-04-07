@@ -2,6 +2,8 @@ import java.awt.*;
 import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
 
 public class Assignment5
 {
@@ -25,21 +27,16 @@ public class Assignment5
         myCardTable.setLocationRelativeTo(null);
         myCardTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // show everything to the user
-        myCardTable.setVisible(true);
-
         // CREATE LABELS ----------------------------------------------------
         for (int i = 0; i < myCardTable.getNumCardsPerHand(); i++)
         {
             computerLabels[i] = new JLabel();
             computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
             humanLabels[i] = new JLabel();
-            //humanLabels[i].setIcon(new ImageIcon("images/AS.gif"));
             humanLabels[i].setIcon(guiCard.getIcon(randomCardGenerator()));
         }
 
         // ADD LABELS TO PANELS -----------------------------------------
-        //myCardTable.add
         for (int i = 0; i < myCardTable.getNumCardsPerHand(); i++)
         {
             myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
@@ -49,24 +46,23 @@ public class Assignment5
         {
             myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
         }
+        // Text
         JLabel playerLabel = new JLabel( "Player", JLabel.CENTER );
         JLabel computerLabel = new JLabel( "Computer", JLabel.CENTER );
+
+        // Card Labels
         JLabel playerCardLabel = new JLabel( "", JLabel.CENTER );
         JLabel computerCardLabel = new JLabel( "", JLabel.CENTER );
 
         playerCardLabel.setIcon(guiCard.getIcon(randomCardGenerator()));
         computerCardLabel.setIcon(guiCard.getBackCardIcon());
 
-        //playerCardLabel.setIcon(new ImageIcon("images/BK.gif"));
-        //computerCardLabel.setIcon(new ImageIcon("images/BK.gif"));
-
         // and two random cards in the play region (simulating a computer/hum ply)
-        //code goes here ...
         myCardTable.pnlPlayArea.add(playerCardLabel);
         myCardTable.pnlPlayArea.add(computerCardLabel);
         myCardTable.pnlPlayArea.add(playerLabel);
         myCardTable.pnlPlayArea.add(computerLabel);
-
+        
         // show everything to the user
         myCardTable.setVisible(true);
     }
@@ -103,7 +99,6 @@ class CardTable extends JFrame
         pnlHumanHand = new JPanel();
         pnlPlayArea = new JPanel();
 
-
         TitledBorder playerBorderTitle = BorderFactory.createTitledBorder("Player Hand");
         TitledBorder playAreaBorderTitle = BorderFactory.createTitledBorder("Play Area");
         TitledBorder computerBorderTitle = BorderFactory.createTitledBorder("Computer Hand");
@@ -111,7 +106,6 @@ class CardTable extends JFrame
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
         GridLayout playAreaLayout = new GridLayout(2, 2);
-        GridLayout mainLayout = new GridLayout(3, 1);
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
@@ -121,7 +115,13 @@ class CardTable extends JFrame
         pnlHumanHand.setBorder(playerBorderTitle);
         pnlComputerHand.setBorder(computerBorderTitle);
 
-        this.setLayout(mainLayout);
+        this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+
+        pnlComputerHand.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnlComputerHand.setPreferredSize(new Dimension(50, 80));
+
+        pnlHumanHand.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnlHumanHand.setPreferredSize(new Dimension(50, 80));
 
         this.add(pnlComputerHand);
         this.add(pnlPlayArea);
@@ -233,6 +233,7 @@ class GUICard
             case '1':
                 return 'X';
             case '0':
+                return 'A';
             case '2':
             case '3':
             case '4':
