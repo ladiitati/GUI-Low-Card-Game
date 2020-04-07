@@ -24,19 +24,6 @@ public class Assignment5 {
         CardGameFramework LowCardGame = new CardGameFramework(numPacksPerDeck, numJokersPerPack, numUnusedCardsPerPack,
                 unusedCardsPerPack, NUM_PLAYERS, NUM_CARDS_PER_HAND);
         LowCardGame.deal();
-        renderBoard(LowCardGame, scoreCard);
-    }
-
-    static Card randomCardGenerator() {
-        char[] values = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'A', 'K', 'Q', 'J' };
-        int value = new Random().nextInt(values.length);
-        Random random = new Random();
-        Card card = new Card(values[value], Suit.values()[random.nextInt(Suit.values().length)]);
-
-        return card;
-    }
-
-    public static void renderBoard(CardGameFramework LowCardGame, ScoreCard scoreCard) {
         Hand playerHand = LowCardGame.getHand(0);
         Hand computerHand = LowCardGame.getHand(1);
 
@@ -72,6 +59,8 @@ public class Assignment5 {
                 public void mousePressed(MouseEvent click) {
                     // lookup the current card and set it in the GUI
                     playerCardLabel.setIcon(GUICard.getIcon(playerHand.inspectCard(handIndex)));
+                    humanLabels[handIndex].setIcon(null);
+                    computerLabels[0].setIcon(null);
 
                     int computerCardIndex = findLowestComputerCard(computerHand, computerCardLabel);
 
@@ -86,6 +75,7 @@ public class Assignment5 {
                         scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
                     }
+                    // renderHand(playerHand, humanLabels, computerLabels, myCardTable);
 
                     myCardTable.addMouseListener(new MouseInputAdapter() {
                         @Override
@@ -93,8 +83,6 @@ public class Assignment5 {
                             // draw new cards and reset the board
                             LowCardGame.takeCard(0);
                             LowCardGame.takeCard(1);
-                            LowCardGame.sortHands();
-                            renderBoard(LowCardGame, scoreCard);
                         }
                     });
                 }
@@ -108,8 +96,35 @@ public class Assignment5 {
         myCardTable.pnlPlayArea.add(playerLabel);
         myCardTable.pnlPlayArea.add(computerLabel);
 
+        myCardTable.pack();
         // show everything to the user
         myCardTable.setVisible(true);
+    }
+
+    static Card randomCardGenerator() {
+        char[] values = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'A', 'K', 'Q', 'J' };
+        int value = new Random().nextInt(values.length);
+        Random random = new Random();
+        Card card = new Card(values[value], Suit.values()[random.nextInt(Suit.values().length)]);
+
+        return card;
+    }
+
+    public static void renderHand(Hand playerHand, JLabel[] humanLabels, JLabel[] computerLabels, CardTable myCardTable) {
+        computerLabels = new JLabel[NUM_CARDS_PER_HAND];
+        humanLabels = new JLabel[NUM_CARDS_PER_HAND];
+
+        for (int i = 0; i < playerHand.getNumCards(); i++) {
+            System.out.println(playerHand.inspectCard(i).toString());
+            computerLabels[i] = new JLabel();
+            computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
+            myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
+
+            humanLabels[i] = new JLabel();
+            // set the icon for player card
+            humanLabels[i].setIcon(GUICard.getIcon(playerHand.inspectCard(i)));
+            myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
+        }
     }
 
     // reset board - add new cards to each hand
