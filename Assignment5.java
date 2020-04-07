@@ -27,14 +27,41 @@ public class Assignment5 {
         renderBoard(LowCardGame, scoreCard);
     }
 
+    //returns a random generated card
     static Card randomCardGenerator() {
-        char[] values = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'A', 'K', 'Q', 'J' };
+        char[] values = new char[]
+                {'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'X'};
         int value = new Random().nextInt(values.length);
         Random random = new Random();
-        Card card = new Card(values[value], Suit.values()[random.nextInt(Suit.values().length)]);
+        Card card = new Card(values[value],Suit.values()[random.nextInt(Suit.values().length)]);
 
         return card;
     }
+
+   /* public static void main(String[] args) {
+        Deck deck = new Deck(1);
+
+        //test arraySort
+        Hand hand = new Hand();
+        for (int j = 0; j < 56; j++) {
+            hand.takeCard(deck.dealCard());
+        }
+        
+       System.out.println(hand.toString());
+       hand.sort();
+
+        //Test randomCardGenerator()
+        System.out.println("TEST randomCardGenerator()");
+        Card testCard = randomCardGenerator();
+        System.out.println(testCard);
+
+        //Test removeCard
+        deck.removeCard(testCard);
+
+        //Test addCard
+        deck.addCard(testCard);
+
+    }*/
 
     public static void renderBoard(CardGameFramework LowCardGame, ScoreCard scoreCard) {
         Hand playerHand = LowCardGame.getHand(0);
@@ -554,6 +581,7 @@ class Deck {
     private static Card[] masterPack;
     private Card[] cards = new Card[MAX_CARDS];
     private int topCard;
+    int numPacks;
 
     // Constructor that populates the Card array
     public Deck(int numPacks) {
@@ -569,6 +597,10 @@ class Deck {
 
     // Re-populates cards[] with the designated number of packs of cards
     public void init(int numPacks) {
+        //validates number of backs
+        if(numPacks < 1 || numPacks > 6){
+            this.numPacks = numPacks;
+        }
         // Find total number of cards
         topCard = (56 * numPacks);
         if (topCard <= MAX_CARDS) {
@@ -631,26 +663,75 @@ class Deck {
         return card;
     }
 
-    public boolean addCard(Card card) {
+    //Add a card to the deck and reassigns top card
+    public boolean addCard(Card card){
+        int numOfInstance = 0;
 
-        if (cards.length > topCard) {
-            cards[++topCard] = card;
+        //check number of card instances
+        for (int i = 0; i < cards.length-1; i++){
+            if (cards[i].equals(card)){
+                numOfInstance ++;
+            }
+        }
+        if(numPacks > numOfInstance ){
+            return false;
+        }
+
+        if (cards.length >= topCard) {
+            topCard++;
+            cards[topCard-1] = card;
+            /****************
+                TEST PRINT
+             *****************/
+            System.out.println("\n");
+                System.out.println("ADD TEST");
+            for(Card cardPrint : cards){
+                System.out.println(cardPrint);
+            }
             return true;
         }
         return false;
     }
 
-    public boolean removeCard(Card card) {
-        for (Card cardss : cards) {
-        }
-        for (int i = 0; i < cards.length; i++) {
-            if (cards[i].equals(card)) {
-                cards[i] = cards[topCard - 1];
+    //Removes a card from a deck and reassign top card
+    public boolean removeCard(Card card){
+        Card temp;
+        int numOfInstance = 0;
 
-                topCard--;
+        //counts the number of instances of a card
+        for (int i = 0; i < cards.length-1; i++){
+            if (cards[i].equals(card)){
+                numOfInstance ++;
+            }
+        }
+        //returns false if the card isnt found in the deck
+        if(numOfInstance == 0 ){
+            return false;
+        }
+
+        //removes card from deck and reassign topCard
+        for (int i = 0; i < cards.length; i++) {
+
+            if (cards[i].equals(card)) {
+                for(int j = i; j < cards.length-1; j++){
+                    temp = cards[j];
+                    cards[j] = cards[j+1];
+                    cards[j+1] = temp;
+                }
+              cards[topCard-1] = null;
+              topCard--;
+                /****************
+                    TEST PRINT
+                *****************/
+                System.out.println("\n");
+                System.out.println("REMOVE TEST");
+                for(Card cardPrint : cards){
+                    System.out.println(cardPrint);
+                }
                 return true;
             }
         }
+
         return false;
     }
 
