@@ -84,8 +84,6 @@ public class Assignment5 {
         JLabel loseLable = new JLabel("You lose", JLabel.CENTER);
         JLabel playerScoreLabelName = new JLabel("Player", JLabel.CENTER);
         JLabel computerScoreLabelName = new JLabel("Computer", JLabel.CENTER);
-        JLabel playerScoreLabel = new JLabel("", JLabel.CENTER);
-        JLabel computerScoreLabel = new JLabel("", JLabel.CENTER);
 
         // CREATE LABELS AND ADD TO PANELS
         // ----------------------------------------------------
@@ -115,9 +113,11 @@ public class Assignment5 {
                     // update the scorecard according to the result of the round
                     if (playerWins) {
                         scoreCard.setPlayerScore(scoreCard.getPlayerScore() + 1);
+                        myCardTable.pnlScoreBoard.add(winLable);
                         System.out.println("You win! Current score is " + scoreCard.getCurrentScore());
                     } else {
                         scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
+                        myCardTable.pnlScoreBoard.add(loseLable);
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
                     }
 
@@ -141,8 +141,6 @@ public class Assignment5 {
         myCardTable.pnlPlayArea.add(computerCardLabel);
         myCardTable.pnlPlayArea.add(playerLabel);
         myCardTable.pnlPlayArea.add(computerLabel);
-        myCardTable.pnlScoreBoard.add(playerScoreLabelName);
-        myCardTable.pnlScoreBoard.add(computerScoreLabelName);
 
         // show everything to the user
         myCardTable.setVisible(true);
@@ -239,7 +237,7 @@ class CardTable extends JFrame {
 
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
-        GridLayout scoreLayout = new GridLayout(1, 2);
+        FlowLayout scoreLayout = new FlowLayout();
         GridLayout playAreaLayout = new GridLayout(2, 2);
         GridLayout mainLayout = new GridLayout(4, 1);
 
