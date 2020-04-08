@@ -122,7 +122,8 @@ public class Assignment5 {
     }
 
     public static boolean playRound(Card playerCard, Card computerCard) {
-        return playerCard.getValue() < computerCard.getValue();
+        Card[] playedCards = Card.arraySort(new Card[]{playerCard, computerCard}, 2);
+        return playerCard.value == playedCards[0].value;
     }
 
     // find the lowest card in the computer's hand
@@ -452,7 +453,7 @@ class Card {
         return false;
     }
 
-    static void arraySort(Card[] cards, int arraySize) {
+    static Card[] arraySort(Card[] cards, int arraySize) {
         Card temp;
 
         for (int i = 0; i < arraySize; i++) {
@@ -467,6 +468,7 @@ class Card {
                 }
             }
         }
+        return cards;
     }
 }
 
