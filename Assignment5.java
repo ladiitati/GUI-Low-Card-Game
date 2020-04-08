@@ -80,6 +80,13 @@ public class Assignment5 {
         JLabel playerCardLabel = new JLabel("", JLabel.CENTER);
         JLabel computerCardLabel = new JLabel("", JLabel.CENTER);
 
+        JLabel winLable = new JLabel("You win!", JLabel.CENTER);
+        JLabel loseLable = new JLabel("You lose", JLabel.CENTER);
+        JLabel playerScoreLabelName = new JLabel("Player", JLabel.CENTER);
+        JLabel computerScoreLabelName = new JLabel("Computer", JLabel.CENTER);
+        JLabel playerScoreLabel = new JLabel("", JLabel.CENTER);
+        JLabel computerScoreLabel = new JLabel("", JLabel.CENTER);
+
         // CREATE LABELS AND ADD TO PANELS
         // ----------------------------------------------------
         for (int i = 0; i < playerHand.getNumCards(); i++) {
@@ -134,6 +141,8 @@ public class Assignment5 {
         myCardTable.pnlPlayArea.add(computerCardLabel);
         myCardTable.pnlPlayArea.add(playerLabel);
         myCardTable.pnlPlayArea.add(computerLabel);
+        myCardTable.pnlScoreBoard.add(playerScoreLabelName);
+        myCardTable.pnlScoreBoard.add(computerScoreLabelName);
 
         // show everything to the user
         myCardTable.setVisible(true);
@@ -230,7 +239,7 @@ class CardTable extends JFrame {
 
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
-        FlowLayout scoreLayout = new FlowLayout();
+        GridLayout scoreLayout = new GridLayout(1, 2);
         GridLayout playAreaLayout = new GridLayout(2, 2);
         GridLayout mainLayout = new GridLayout(4, 1);
 
