@@ -139,8 +139,6 @@ public class Assignment5 {
             CardTable myCardTable) {
 
         for (int i = 0; i < NUM_CARDS_PER_HAND; i++) {
-            System.out.println(playerHand.toString());
-
             if (i < computerHand.getNumCards()) {
                 computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
                 myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
