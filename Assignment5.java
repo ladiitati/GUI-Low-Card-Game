@@ -27,6 +27,7 @@ public class Assignment5 {
         renderBoard(LowCardGame, scoreCard);
     }
 
+
     //returns a random generated card
     static Card randomCardGenerator() {
         char[] values = new char[]
@@ -40,7 +41,6 @@ public class Assignment5 {
 
    /* public static void main(String[] args) {
         Deck deck = new Deck(1);
-
         //test arraySort
         Hand hand = new Hand();
         for (int j = 0; j < 56; j++) {
@@ -49,18 +49,14 @@ public class Assignment5 {
         
        System.out.println(hand.toString());
        hand.sort();
-
         //Test randomCardGenerator()
         System.out.println("TEST randomCardGenerator()");
         Card testCard = randomCardGenerator();
         System.out.println(testCard);
-
         //Test removeCard
         deck.removeCard(testCard);
-
         //Test addCard
         deck.addCard(testCard);
-
     }*/
 
     public static void renderBoard(CardGameFramework LowCardGame, ScoreCard scoreCard) {
@@ -120,10 +116,14 @@ public class Assignment5 {
                     if (playerWins) {
                         scoreCard.setPlayerScore(scoreCard.getPlayerScore() + 1);
                         myCardTable.pnlScoreBoard.add(winLable);
+                        testLable.setText("change!");
+                        myCardTable.pnlScoreBoardT.add(testLable);
                         System.out.println("You win! Current score is " + scoreCard.getCurrentScore());
                     } else {
                         scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
                         myCardTable.pnlScoreBoard.add(loseLable);
+                        testLable.setText("change!");
+                        myCardTable.pnlScoreBoardT.add(testLable);
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
                     }
                 }
@@ -147,7 +147,7 @@ public class Assignment5 {
         myCardTable.pnlPlayArea.add(playerLabel);
 
         myCardTable.pnlScoreBoardT.add(testLable);
-
+        
         myCardTable.pnlPlayArea.add(computerLabel);
 
         // show everything to the user
@@ -241,7 +241,7 @@ class CardTable extends JFrame {
     static int MAX_CARDS_PER_HAND = 56;
     static int MAX_PLAYERS = 2; // for now, we only allow 2 person games
 
-    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard;
+    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard, pnlScoreBoardT;
 
     private int numCardsPerHand;
     private int numPlayers;
@@ -256,6 +256,8 @@ class CardTable extends JFrame {
         pnlPlayArea = new JPanel();
         pnlScoreBoard = new JPanel();
 
+        pnlScoreBoardT = new JPanel();
+
         TitledBorder playerBorderTitle = BorderFactory.createTitledBorder("Player Hand");
         TitledBorder playAreaBorderTitle = BorderFactory.createTitledBorder("Play Area");
         TitledBorder computerBorderTitle = BorderFactory.createTitledBorder("Computer Hand");
@@ -264,13 +266,19 @@ class CardTable extends JFrame {
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
         FlowLayout scoreLayout = new FlowLayout();
+
+        GridLayout scoreTLayout = new GridLayout(2, 2);
+
         GridLayout playAreaLayout = new GridLayout(2, 2);
-        GridLayout mainLayout = new GridLayout(4, 1);
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
         pnlPlayArea.setLayout(playAreaLayout);
         pnlScoreBoard.setLayout(scoreLayout);
+
+        pnlScoreBoard.setLayout(scoreTLayout);
+
+        pnlScoreBoard.add(pnlScoreBoardT);
 
         pnlPlayArea.setBorder(playAreaBorderTitle);
         pnlHumanHand.setBorder(playerBorderTitle);
@@ -712,7 +720,6 @@ class Deck {
     //Add a card to the deck and reassigns top card
   /*  public boolean addCard(Card card){
         int numOfInstance = 0;
-
         //check number of card instances
         for (int i = 0; i < cards.length-1; i++){
             if (cards[i].equals(card)){
@@ -722,11 +729,9 @@ class Deck {
         if(numPacks > numOfInstance ){
             return false;
         }
-
         if (cards.length >= topCard) {
             topCard++;
             cards[topCard-1] = card;
-
             return true;
         }
         return false;
