@@ -39,6 +39,7 @@ public class Assignment5 {
         JLabel computerLabel = new JLabel("Computer", JLabel.CENTER);
         JLabel playerCardLabel = new JLabel("", JLabel.CENTER);
         JLabel computerCardLabel = new JLabel("", JLabel.CENTER);
+        JLabel scoreBoardLabel = new JLabel("", JLabel.CENTER);
 
         // CREATE LABELS AND ADD TO PANELS
         // ----------------------------------------------------
@@ -69,11 +70,13 @@ public class Assignment5 {
                             LowCardGame.playCard(1, computerCardIndex));
                     // update the scorecard according to the result of the round
                     if (playerWins) {
-                        scoreCard.setPlayerScore(scoreCard.getPlayerScore() + 1);
+                        scoreCard.setPlayerScore((scoreCard.getPlayerScore() + 1));
                         System.out.println("You win! Current score is " + scoreCard.getCurrentScore());
+                        scoreBoardLabel.setText(scoreCard.getCurrentScore());
                     } else {
-                        scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
+                        scoreCard.setComputerScore((scoreCard.getComputerScore() + 1));
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
+                        scoreBoardLabel.setText(scoreCard.getCurrentScore());
                     }
                 }
             });
@@ -95,6 +98,7 @@ public class Assignment5 {
         myCardTable.pnlPlayArea.add(computerCardLabel);
         myCardTable.pnlPlayArea.add(playerLabel);
         myCardTable.pnlPlayArea.add(computerLabel);
+        myCardTable.pnlScoreBoard.add(scoreBoardLabel);
 
         // show everything to the user
         myCardTable.setVisible(true);
@@ -191,7 +195,7 @@ class CardTable extends JFrame {
     static int MAX_CARDS_PER_HAND = 56;
     static int MAX_PLAYERS = 2; // for now, we only allow 2 person games
 
-    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea;
+    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard;
 
     private int numCardsPerHand;
     private int numPlayers;
@@ -204,22 +208,27 @@ class CardTable extends JFrame {
         pnlComputerHand = new JPanel();
         pnlHumanHand = new JPanel();
         pnlPlayArea = new JPanel();
+        pnlScoreBoard = new JPanel();
 
         TitledBorder playerBorderTitle = BorderFactory.createTitledBorder("Player Hand");
         TitledBorder playAreaBorderTitle = BorderFactory.createTitledBorder("Play Area");
         TitledBorder computerBorderTitle = BorderFactory.createTitledBorder("Computer Hand");
+        TitledBorder scoreBoardBorderTitle = BorderFactory.createTitledBorder("Score Board");
 
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
         GridLayout playAreaLayout = new GridLayout(2, 2);
+        FlowLayout cmpScoreLayout = new FlowLayout();
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
         pnlPlayArea.setLayout(playAreaLayout);
+        pnlScoreBoard.setLayout(cmpScoreLayout);
 
         pnlPlayArea.setBorder(playAreaBorderTitle);
         pnlHumanHand.setBorder(playerBorderTitle);
         pnlComputerHand.setBorder(computerBorderTitle);
+        pnlScoreBoard.setBorder(scoreBoardBorderTitle);
 
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 
@@ -229,10 +238,13 @@ class CardTable extends JFrame {
         pnlHumanHand.setAlignmentX(Component.CENTER_ALIGNMENT);
         pnlHumanHand.setPreferredSize(new Dimension(50, 80));
 
+        pnlScoreBoard.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnlScoreBoard.setPreferredSize(new Dimension(50, 80));
+
         this.add(pnlComputerHand);
         this.add(pnlPlayArea);
         this.add(pnlHumanHand);
-
+        this.add(pnlScoreBoard);
     }
 
     public int getNumCardsPerHand() {
