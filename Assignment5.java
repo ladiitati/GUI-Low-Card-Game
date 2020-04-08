@@ -127,11 +127,6 @@ public class Assignment5 {
         }
     }
 
-    // reset board - add new cards to each hand
-    public static void resetGame() {
-
-    }
-
     public static boolean playRound(Card playerCard, Card computerCard) {
         return playerCard.getValue() < computerCard.getValue();
     }
