@@ -208,7 +208,7 @@ class CardTable extends JFrame {
     static int MAX_CARDS_PER_HAND = 56;
     static int MAX_PLAYERS = 2; // for now, we only allow 2 person games
 
-    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea;
+    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard;
 
     private int numCardsPerHand;
     private int numPlayers;
@@ -221,29 +221,35 @@ class CardTable extends JFrame {
         pnlComputerHand = new JPanel();
         pnlHumanHand = new JPanel();
         pnlPlayArea = new JPanel();
+        pnlScoreBoard = new JPanel();
 
         TitledBorder playerBorderTitle = BorderFactory.createTitledBorder("Player Hand");
         TitledBorder playAreaBorderTitle = BorderFactory.createTitledBorder("Play Area");
         TitledBorder computerBorderTitle = BorderFactory.createTitledBorder("Computer Hand");
+        TitledBorder scoreBorderTitle = BorderFactory.createTitledBorder("Score Board");
 
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
+        FlowLayout scoreLayout = new FlowLayout();
         GridLayout playAreaLayout = new GridLayout(2, 2);
-        GridLayout mainLayout = new GridLayout(3, 1);
+        GridLayout mainLayout = new GridLayout(4, 1);
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
         pnlPlayArea.setLayout(playAreaLayout);
+        pnlScoreBoard.setLayout(scoreLayout);
 
         pnlPlayArea.setBorder(playAreaBorderTitle);
         pnlHumanHand.setBorder(playerBorderTitle);
         pnlComputerHand.setBorder(computerBorderTitle);
+        pnlScoreBoard.setBorder(scoreBorderTitle);
 
         this.setLayout(mainLayout);
 
         this.add(pnlComputerHand);
         this.add(pnlPlayArea);
         this.add(pnlHumanHand);
+        this.add(pnlScoreBoard);
 
     }
 
@@ -664,7 +670,7 @@ class Deck {
     }
 
     //Add a card to the deck and reassigns top card
-    public boolean addCard(Card card){
+  /*  public boolean addCard(Card card){
         int numOfInstance = 0;
 
         //check number of card instances
@@ -680,14 +686,15 @@ class Deck {
         if (cards.length >= topCard) {
             topCard++;
             cards[topCard-1] = card;
-            /****************
-                TEST PRINT
-             *****************/
-            System.out.println("\n");
-                System.out.println("ADD TEST");
-            for(Card cardPrint : cards){
-                System.out.println(cardPrint);
-            }
+
+            return true;
+        }
+        return false;
+    }*/
+    public boolean addCard(Card card) {
+
+        if (cards.length > topCard) {
+            cards[++topCard] = card;
             return true;
         }
         return false;
@@ -720,14 +727,7 @@ class Deck {
                 }
               cards[topCard-1] = null;
               topCard--;
-                /****************
-                    TEST PRINT
-                *****************/
-                System.out.println("\n");
-                System.out.println("REMOVE TEST");
-                for(Card cardPrint : cards){
-                    System.out.println(cardPrint);
-                }
+
                 return true;
             }
         }
