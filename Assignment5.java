@@ -26,6 +26,7 @@ public class Assignment5 {
         LowCardGame.deal();
         Hand playerHand = LowCardGame.getHand(0);
         Hand computerHand = LowCardGame.getHand(1);
+        LowCardGame.sortHands();
 
         GUICard guiCard = new GUICard();
 
@@ -80,6 +81,7 @@ public class Assignment5 {
                     }
                     LowCardGame.takeCard(0);
                     LowCardGame.takeCard(1);
+                    LowCardGame.sortHands();
                     clearHand(playerHand);
                     renderHand(playerHand, computerHand, humanLabels, computerLabels, myCardTable);
                 }
@@ -99,30 +101,33 @@ public class Assignment5 {
     }
 
     public static void clearHand(Hand playerHand) {
-        for (int i = 0; i < 7; i++) {
-            humanLabels[i].setIcon(null);
+        for (int i = 0; i < NUM_CARDS_PER_HAND; i++) {
+            try {
+                humanLabels[i].setIcon(null);
+            } catch (Exception e) {
+            }
         }
     }
 
     public static void renderHand(Hand playerHand, Hand computerHand, JLabel[] humanLabels, JLabel[] computerLabels,
             CardTable myCardTable) {
-        myCardTable.pnlHumanHand.removeAll();
-        myCardTable.pnlComputerHand.removeAll();
-        myCardTable.pnlHumanHand.revalidate();
-        myCardTable.pnlComputerHand.revalidate();
 
-        for (int i = 0; i < playerHand.getNumCards(); i++) {
-            computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
-            myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
+        for (int i = 0; i < NUM_CARDS_PER_HAND; i++) {
+            if (i < computerHand.getNumCards()) {
+                computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
+                myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
+            }
 
-            // set the icon for player card
-            humanLabels[i].setIcon(GUICard.getIcon(playerHand.inspectCard(i)));
-            myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
+            if (i < playerHand.getNumCards()) {
+                // set the icon for player card
+                humanLabels[i].setIcon(GUICard.getIcon(playerHand.inspectCard(i)));
+                myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
+            }
         }
     }
 
     public static boolean playRound(Card playerCard, Card computerCard) {
-        Card[] playedCards = Card.arraySort(new Card[]{playerCard, computerCard}, 2);
+        Card[] playedCards = Card.arraySort(new Card[] { playerCard, computerCard }, 2);
         return playerCard.value == playedCards[0].value;
     }
 
