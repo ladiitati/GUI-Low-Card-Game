@@ -1,3 +1,24 @@
+/**************************************************************
+ Tatiana Adams, Ryan Barrett, Matthew Taylor, Rowena Terrado
+ 7th April 2020
+ CST 338 Software Design
+ Assignment 5: Low Card Game - Phase 2
+ This is phase 2 of the Low Card Game assignment.  Phase 2 builds
+ upon Phase 1 using a 2D array of Icons instead of the 1D array
+ from Phase 1.  Two new classes are added, the CardTable and
+ GUICard classes.  The CardTable class represents the playing
+ surface for the low card game.  This includes panels for
+ the human player, the computer player, and an area in between
+ where the game is actually played.  The two player areas use
+ FlowLayout and the play area uses a GridLayout.  These three
+ panels are loaded into a box layout. The GUICard class
+ builds on work from Phase 1 to create the 2D array of
+ card Icons.  The card, hand, and deck classes from the previous
+ assignment are brought in to handle cards.  A sort method has
+ been added to the Card class and a static getRandomCard method
+ added to the main class.
+ ***************************************************************/
+
 import java.awt.*;
 import java.util.Random;
 import javax.swing.*;
