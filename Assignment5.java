@@ -83,6 +83,9 @@ public class Assignment5 {
 
         JLabel winLable = new JLabel("You win!", JLabel.CENTER);
         JLabel loseLable = new JLabel("You lose", JLabel.CENTER);
+
+        JLabel testLable = new JLabel("TEST!!!", JLabel.CENTER);
+
         JLabel playerScoreLabelName = new JLabel("Player", JLabel.CENTER);
         JLabel computerScoreLabelName = new JLabel("Computer", JLabel.CENTER);
 
@@ -113,14 +116,19 @@ public class Assignment5 {
                     // determine who had the lower card
                     boolean playerWins = playRound(LowCardGame.playCard(0, handIndex),
                             LowCardGame.playCard(1, computerCardIndex));
+            
                     // update the scorecard according to the result of the round
                     if (playerWins) {
                         scoreCard.setPlayerScore(scoreCard.getPlayerScore() + 1);
                         myCardTable.pnlScoreBoard.add(winLable);
+                        testLable.setText("change!");
+                        myCardTable.pnlScoreBoardT.add(testLable);
                         System.out.println("You win! Current score is " + scoreCard.getCurrentScore());
                     } else {
                         scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
                         myCardTable.pnlScoreBoard.add(loseLable);
+                        testLable.setText("change!");
+                        myCardTable.pnlScoreBoardT.add(testLable);
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
                     }
                 }
@@ -142,19 +150,13 @@ public class Assignment5 {
         myCardTable.pnlPlayArea.add(playerCardLabel);
         myCardTable.pnlPlayArea.add(computerCardLabel);
         myCardTable.pnlPlayArea.add(playerLabel);
+
+        myCardTable.pnlScoreBoardT.add(testLable);
+        
         myCardTable.pnlPlayArea.add(computerLabel);
 
         // show everything to the user
         myCardTable.setVisible(true);
-    }
-
-    static Card randomCardGenerator() {
-        char[] values = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'A', 'K', 'Q', 'J' };
-        int value = new Random().nextInt(values.length);
-        Random random = new Random();
-        Card card = new Card(values[value], Suit.values()[random.nextInt(Suit.values().length)]);
-
-        return card;
     }
 
     public static void renderHand(Hand playerHand, Hand computerHand, JLabel[] humanLabels, JLabel[] computerLabels,
@@ -244,7 +246,7 @@ class CardTable extends JFrame {
     static int MAX_CARDS_PER_HAND = 56;
     static int MAX_PLAYERS = 2; // for now, we only allow 2 person games
 
-    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard;
+    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard, pnlScoreBoardT;
 
     private int numCardsPerHand;
     private int numPlayers;
@@ -259,6 +261,8 @@ class CardTable extends JFrame {
         pnlPlayArea = new JPanel();
         pnlScoreBoard = new JPanel();
 
+        pnlScoreBoardT = new JPanel();
+
         TitledBorder playerBorderTitle = BorderFactory.createTitledBorder("Player Hand");
         TitledBorder playAreaBorderTitle = BorderFactory.createTitledBorder("Play Area");
         TitledBorder computerBorderTitle = BorderFactory.createTitledBorder("Computer Hand");
@@ -267,13 +271,19 @@ class CardTable extends JFrame {
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
         FlowLayout scoreLayout = new FlowLayout();
+
+        GridLayout scoreTLayout = new GridLayout(2, 2);
+
         GridLayout playAreaLayout = new GridLayout(2, 2);
-        GridLayout mainLayout = new GridLayout(4, 1);
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
         pnlPlayArea.setLayout(playAreaLayout);
         pnlScoreBoard.setLayout(scoreLayout);
+
+        pnlScoreBoard.setLayout(scoreTLayout);
+
+        pnlScoreBoard.add(pnlScoreBoardT);
 
         pnlPlayArea.setBorder(playAreaBorderTitle);
         pnlHumanHand.setBorder(playerBorderTitle);
