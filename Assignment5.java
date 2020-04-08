@@ -113,6 +113,8 @@ public class Assignment5 {
             CardTable myCardTable) {
 
         for (int i = 0; i < NUM_CARDS_PER_HAND; i++) {
+            System.out.println(playerHand.toString());
+
             if (i < computerHand.getNumCards()) {
                 computerLabels[i].setIcon(new ImageIcon("images/BK.gif"));
                 myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
@@ -332,10 +334,10 @@ class GUICard {
     static private int valueAsInt(Card card) {
         char value = card.getValue();
         switch (value) {
-            case '1':
-                return 'X';
-            case '0':
-                return 'A';
+            case 'X':
+                return 1;
+            case 'A':
+                return 0;
             case '2':
             case '3':
             case '4':
