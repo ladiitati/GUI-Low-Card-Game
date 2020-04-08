@@ -75,12 +75,6 @@ public class Assignment5 {
         JLabel computerLabel = new JLabel("Computer", JLabel.CENTER);
         JLabel playerCardLabel = new JLabel("", JLabel.CENTER);
         JLabel computerCardLabel = new JLabel("", JLabel.CENTER);
-
-        JLabel winLable = new JLabel("You win!", JLabel.CENTER);
-        JLabel loseLable = new JLabel("You lose", JLabel.CENTER);
-
-        JLabel testLable = new JLabel("TEST!!!", JLabel.CENTER);
-
         JLabel playerScoreLabelName = new JLabel("Player", JLabel.CENTER);
         JLabel computerScoreLabelName = new JLabel("Computer", JLabel.CENTER);
 
@@ -111,21 +105,27 @@ public class Assignment5 {
                     // determine who had the lower card
                     boolean playerWins = playRound(LowCardGame.playCard(0, handIndex),
                             LowCardGame.playCard(1, computerCardIndex));
-            
+
+                    String playerScoreString = "";
+                    String computerScoreString = "";
+                    String winLoseString = "";
+                    
                     // update the scorecard according to the result of the round
                     if (playerWins) {
                         scoreCard.setPlayerScore(scoreCard.getPlayerScore() + 1);
-                        myCardTable.pnlScoreBoard.add(winLable);
-                        testLable.setText("change!");
-                        myCardTable.pnlScoreBoardT.add(testLable);
+                     //   testLable.setText("change!");
                         System.out.println("You win! Current score is " + scoreCard.getCurrentScore());
                     } else {
                         scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
-                        myCardTable.pnlScoreBoard.add(loseLable);
-                        testLable.setText("change!");
-                        myCardTable.pnlScoreBoardT.add(testLable);
+                      //  computerScoreLabelName.setText(text);
+                     //   testLable.setText("change! " + t);
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
                     }
+                    
+                    playerScoreString += scoreCard.getPlayerScore();
+                  //  playerScoreLabel.setText(playerScoreString);
+
+                    computerScoreLabelName.setText(text);
                 }
             });
         }
@@ -145,10 +145,11 @@ public class Assignment5 {
         myCardTable.pnlPlayArea.add(playerCardLabel);
         myCardTable.pnlPlayArea.add(computerCardLabel);
         myCardTable.pnlPlayArea.add(playerLabel);
-
-        myCardTable.pnlScoreBoardT.add(testLable);
-        
         myCardTable.pnlPlayArea.add(computerLabel);
+
+        myCardTable.pnlScoreBoard.add(playerScoreLabelName);
+        myCardTable.pnlScoreBoard.add(computerScoreLabelName);
+
 
         // show everything to the user
         myCardTable.setVisible(true);
@@ -241,7 +242,7 @@ class CardTable extends JFrame {
     static int MAX_CARDS_PER_HAND = 56;
     static int MAX_PLAYERS = 2; // for now, we only allow 2 person games
 
-    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard, pnlScoreBoardT;
+    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard;
 
     private int numCardsPerHand;
     private int numPlayers;
@@ -256,8 +257,6 @@ class CardTable extends JFrame {
         pnlPlayArea = new JPanel();
         pnlScoreBoard = new JPanel();
 
-        pnlScoreBoardT = new JPanel();
-
         TitledBorder playerBorderTitle = BorderFactory.createTitledBorder("Player Hand");
         TitledBorder playAreaBorderTitle = BorderFactory.createTitledBorder("Play Area");
         TitledBorder computerBorderTitle = BorderFactory.createTitledBorder("Computer Hand");
@@ -265,20 +264,13 @@ class CardTable extends JFrame {
 
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
-        FlowLayout scoreLayout = new FlowLayout();
-
-        GridLayout scoreTLayout = new GridLayout(2, 2);
-
+        GridLayout scoreLayout = new GridLayout(1, 2);
         GridLayout playAreaLayout = new GridLayout(2, 2);
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
         pnlPlayArea.setLayout(playAreaLayout);
         pnlScoreBoard.setLayout(scoreLayout);
-
-        pnlScoreBoard.setLayout(scoreTLayout);
-
-        pnlScoreBoard.add(pnlScoreBoardT);
 
         pnlPlayArea.setBorder(playAreaBorderTitle);
         pnlHumanHand.setBorder(playerBorderTitle);
