@@ -27,7 +27,6 @@ public class Assignment5 {
         renderBoard(LowCardGame, scoreCard);
     }
 
-
     //returns a random generated card
     static Card randomCardGenerator() {
         char[] values = new char[]
@@ -121,14 +120,10 @@ public class Assignment5 {
                     if (playerWins) {
                         scoreCard.setPlayerScore(scoreCard.getPlayerScore() + 1);
                         myCardTable.pnlScoreBoard.add(winLable);
-                        testLable.setText("change!");
-                        myCardTable.pnlScoreBoardT.add(testLable);
                         System.out.println("You win! Current score is " + scoreCard.getCurrentScore());
                     } else {
                         scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
                         myCardTable.pnlScoreBoard.add(loseLable);
-                        testLable.setText("change!");
-                        myCardTable.pnlScoreBoardT.add(testLable);
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
                     }
                 }
@@ -246,7 +241,7 @@ class CardTable extends JFrame {
     static int MAX_CARDS_PER_HAND = 56;
     static int MAX_PLAYERS = 2; // for now, we only allow 2 person games
 
-    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard, pnlScoreBoardT, pnlPlayerScore, pnlComputerScore;
+    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard;
 
     private int numCardsPerHand;
     private int numPlayers;
@@ -261,8 +256,6 @@ class CardTable extends JFrame {
         pnlPlayArea = new JPanel();
         pnlScoreBoard = new JPanel();
 
-        pnlScoreBoardT = new JPanel();
-
         TitledBorder playerBorderTitle = BorderFactory.createTitledBorder("Player Hand");
         TitledBorder playAreaBorderTitle = BorderFactory.createTitledBorder("Play Area");
         TitledBorder computerBorderTitle = BorderFactory.createTitledBorder("Computer Hand");
@@ -270,26 +263,14 @@ class CardTable extends JFrame {
 
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
-       // FlowLayout scoreLayout = new FlowLayout();
-
-        GridLayout scoreTLayout = new GridLayout(2, 1);
-        GridLayout playerScoreLayout = new GridLayout(2, 1);
-        GridLayout computerScoreLayout = new GridLayout(2, 1);
-
+        FlowLayout scoreLayout = new FlowLayout();
         GridLayout playAreaLayout = new GridLayout(2, 2);
+        GridLayout mainLayout = new GridLayout(4, 1);
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
         pnlPlayArea.setLayout(playAreaLayout);
-       // pnlScoreBoard.setLayout(scoreLayout);
-
-        pnlScoreBoard.setLayout(scoreTLayout);
-       // pnlPlayerScore.setLayout(playerScoreLayout);
-       // pnlComputerScore.setLayout(computerScoreLayout);
-
-        pnlScoreBoard.add(pnlScoreBoardT);
-     //   pnlScoreBoard.add(pnlPlayerScore);
-     //   pnlScoreBoard.add(pnlComputerScore);
+        pnlScoreBoard.setLayout(scoreLayout);
 
         pnlPlayArea.setBorder(playAreaBorderTitle);
         pnlHumanHand.setBorder(playerBorderTitle);
