@@ -152,7 +152,7 @@ public class Assignment5 {
         myCardTable.pnlPlayArea.add(playerLabel);
 
         myCardTable.pnlScoreBoardT.add(testLable);
-        
+
         myCardTable.pnlPlayArea.add(computerLabel);
 
         // show everything to the user
@@ -246,7 +246,7 @@ class CardTable extends JFrame {
     static int MAX_CARDS_PER_HAND = 56;
     static int MAX_PLAYERS = 2; // for now, we only allow 2 person games
 
-    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard, pnlScoreBoardT;
+    public JPanel pnlComputerHand, pnlHumanHand, pnlPlayArea, pnlScoreBoard, pnlScoreBoardT, pnlPlayerScore, pnlComputerScore;
 
     private int numCardsPerHand;
     private int numPlayers;
@@ -270,20 +270,26 @@ class CardTable extends JFrame {
 
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
-        FlowLayout scoreLayout = new FlowLayout();
+       // FlowLayout scoreLayout = new FlowLayout();
 
-        GridLayout scoreTLayout = new GridLayout(2, 2);
+        GridLayout scoreTLayout = new GridLayout(2, 1);
+        GridLayout playerScoreLayout = new GridLayout(2, 1);
+        GridLayout computerScoreLayout = new GridLayout(2, 1);
 
         GridLayout playAreaLayout = new GridLayout(2, 2);
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
         pnlPlayArea.setLayout(playAreaLayout);
-        pnlScoreBoard.setLayout(scoreLayout);
+       // pnlScoreBoard.setLayout(scoreLayout);
 
         pnlScoreBoard.setLayout(scoreTLayout);
+       // pnlPlayerScore.setLayout(playerScoreLayout);
+       // pnlComputerScore.setLayout(computerScoreLayout);
 
         pnlScoreBoard.add(pnlScoreBoardT);
+     //   pnlScoreBoard.add(pnlPlayerScore);
+     //   pnlScoreBoard.add(pnlComputerScore);
 
         pnlPlayArea.setBorder(playAreaBorderTitle);
         pnlHumanHand.setBorder(playerBorderTitle);
