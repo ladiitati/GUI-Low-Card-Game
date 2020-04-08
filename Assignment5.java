@@ -60,7 +60,7 @@ public class Assignment5 {
                 public void mousePressed(MouseEvent click) {
                     // lookup the current card and set it in the GUI
                     playerCardLabel.setIcon(GUICard.getIcon(playerHand.inspectCard(handIndex)));
-                    humanLabels[handIndex].setIcon(null);
+                    // humanLabels[handIndex].setIcon(null);
                     computerLabels[0].setIcon(null);
 
                     int computerCardIndex = findLowestComputerCard(computerHand, computerCardLabel);
@@ -78,19 +78,13 @@ public class Assignment5 {
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
                         scoreBoardLabel.setText(scoreCard.getCurrentScore());
                     }
+                    LowCardGame.takeCard(0);
+                    LowCardGame.takeCard(1);
+                    clearHand(playerHand);
+                    renderHand(playerHand, computerHand, humanLabels, computerLabels, myCardTable);
                 }
             });
         }
-
-        myCardTable.addMouseListener(new MouseInputAdapter() {
-            @Override
-            public void mousePressed(MouseEvent click) {
-                // draw new cards and reset player hands
-                LowCardGame.takeCard(0);
-                LowCardGame.takeCard(1);
-                renderHand(playerHand, computerHand, humanLabels, computerLabels, myCardTable);
-            }
-        });
 
         // and two random cards in the play region (simulating a computer/hum ply)
         // code goes here ...
@@ -104,20 +98,17 @@ public class Assignment5 {
         myCardTable.setVisible(true);
     }
 
-    static Card randomCardGenerator() {
-        char[] values = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'A', 'K', 'Q', 'J' };
-        int value = new Random().nextInt(values.length);
-        Random random = new Random();
-        Card card = new Card(values[value], Suit.values()[random.nextInt(Suit.values().length)]);
-
-        return card;
+    public static void clearHand(Hand playerHand) {
+        for (int i = 0; i < 7; i++) {
+            humanLabels[i].setIcon(null);
+        }
     }
 
     public static void renderHand(Hand playerHand, Hand computerHand, JLabel[] humanLabels, JLabel[] computerLabels,
             CardTable myCardTable) {
         myCardTable.pnlHumanHand.removeAll();
-        myCardTable.pnlHumanHand.revalidate();
         myCardTable.pnlComputerHand.removeAll();
+        myCardTable.pnlHumanHand.revalidate();
         myCardTable.pnlComputerHand.revalidate();
 
         for (int i = 0; i < playerHand.getNumCards(); i++) {
@@ -125,7 +116,6 @@ public class Assignment5 {
             myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
 
             // set the icon for player card
-            humanLabels[i].setIcon(null);
             humanLabels[i].setIcon(GUICard.getIcon(playerHand.inspectCard(i)));
             myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
         }
@@ -233,13 +223,13 @@ class CardTable extends JFrame {
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 
         pnlComputerHand.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pnlComputerHand.setPreferredSize(new Dimension(50, 80));
-
+        pnlComputerHand.setPreferredSize(new Dimension(50, 70));
         pnlHumanHand.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pnlHumanHand.setPreferredSize(new Dimension(50, 80));
-
+        pnlHumanHand.setPreferredSize(new Dimension(50, 70));
         pnlScoreBoard.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pnlScoreBoard.setPreferredSize(new Dimension(50, 80));
+        pnlScoreBoard.setPreferredSize(new Dimension(50, 10));
+        pnlPlayArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnlPlayArea.setPreferredSize(new Dimension(50, 150));
 
         this.add(pnlComputerHand);
         this.add(pnlPlayArea);
