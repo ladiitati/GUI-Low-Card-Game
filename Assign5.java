@@ -24,46 +24,6 @@ public class Assign5 {
         CardGameFramework LowCardGame = new CardGameFramework(numPacksPerDeck, numJokersPerPack, numUnusedCardsPerPack,
                 unusedCardsPerPack, NUM_PLAYERS, NUM_CARDS_PER_HAND);
         LowCardGame.deal();
-        renderBoard(LowCardGame, scoreCard);
-    }
-
-    //returns a random generated card
-    static Card randomCardGenerator() {
-        char[] values = new char[]
-                {'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'X'};
-        int value = new Random().nextInt(values.length);
-        Random random = new Random();
-        Card card = new Card(values[value],Suit.values()[random.nextInt(Suit.values().length)]);
-
-        return card;
-    }
-
-   /* public static void main(String[] args) {
-        Deck deck = new Deck(1);
-
-        //test arraySort
-        Hand hand = new Hand();
-        for (int j = 0; j < 56; j++) {
-            hand.takeCard(deck.dealCard());
-        }
-        
-       System.out.println(hand.toString());
-       hand.sort();
-
-        //Test randomCardGenerator()
-        System.out.println("TEST randomCardGenerator()");
-        Card testCard = randomCardGenerator();
-        System.out.println(testCard);
-
-        //Test removeCard
-        deck.removeCard(testCard);
-
-        //Test addCard
-        deck.addCard(testCard);
-
-    }*/
-
-    public static void renderBoard(CardGameFramework LowCardGame, ScoreCard scoreCard) {
         Hand playerHand = LowCardGame.getHand(0);
         Hand computerHand = LowCardGame.getHand(1);
 
@@ -81,17 +41,14 @@ public class Assign5 {
         JLabel computerCardLabel = new JLabel("", JLabel.CENTER);
 
         JLabel winLoseLabel = new JLabel("", JLabel.CENTER);
-
-        JLabel playerScoreLabelName = new JLabel("Player", JLabel.CENTER);
-        JLabel computerScoreLabelName = new JLabel("Computer", JLabel.CENTER);
         JLabel playerScoreLabel = new JLabel("0", JLabel.CENTER);
         JLabel computerScoreLabel = new JLabel("0", JLabel.CENTER);
-        
 
         // CREATE LABELS AND ADD TO PANELS
         // ----------------------------------------------------
         for (int i = 0; i < playerHand.getNumCards(); i++) {
             final int handIndex = i;
+            
             computerLabels[i] = new JLabel();
             computerLabels[i].setIcon(new ImageIcon("images/BK.gif")); // computer card backs
             myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
@@ -107,29 +64,26 @@ public class Assign5 {
                 public void mousePressed(MouseEvent click) {
                     // lookup the current card and set it in the GUI
                     playerCardLabel.setIcon(GUICard.getIcon(playerHand.inspectCard(handIndex)));
-                    humanLabels[handIndex].setIcon(null);
+                    // humanLabels[handIndex].setIcon(null);
                     computerLabels[0].setIcon(null);
-                    myCardTable.pnlScoreBoard.removeAll();
+
                     int computerCardIndex = findLowestComputerCard(computerHand, computerCardLabel);
 
                     // determine who had the lower card
                     boolean playerWins = playRound(LowCardGame.playCard(0, handIndex),
                             LowCardGame.playCard(1, computerCardIndex));
-
                     // update the scorecard according to the result of the round
-
-                    String playerScoreString = "";
-                    String computerScoreString = "";
+                    String playerScoreString = "Player: ";
+                    String computerScoreString = "Computer: ";
                     String winLoseString = "";
                     
-                    
                     if (playerWins) {
-                        scoreCard.setPlayerScore(scoreCard.getPlayerScore() + 1);
-                        winLoseString = "You win!";
+                        scoreCard.setPlayerScore((scoreCard.getPlayerScore() + 1));
                         System.out.println("You win! Current score is " + scoreCard.getCurrentScore());
+                        winLoseString = "You won this round!";
                     } else {
-                        scoreCard.setComputerScore(scoreCard.getComputerScore() + 1);
-                        winLoseString = "You lose!";
+                        scoreCard.setComputerScore((scoreCard.getComputerScore() + 1));
+                        winLoseString = "You lost this round!";
                         System.out.println("The computer wins... Current score is " + scoreCard.getCurrentScore());
                     }
                     playerScoreString += scoreCard.getPlayerScore();
@@ -140,39 +94,55 @@ public class Assign5 {
                     myCardTable.pnlScoreBoard.add(playerScoreLabel);
                     myCardTable.pnlScoreBoard.add(winLoseLabel);
                     myCardTable.pnlScoreBoard.add(computerScoreLabel);
+                    
+                    LowCardGame.takeCard(0);
+                    LowCardGame.takeCard(1);
+                    clearHand(playerHand);
+                    renderHand(playerHand, computerHand, humanLabels, computerLabels, myCardTable);
+                    
+                    if (playerHand.getNumCards() == 0) {
+                    gameOver(scoreCard);}
                 }
             });
         }
-
-       /* myCardTable.addMouseListener(new MouseInputAdapter() {
-            @Override
-            public void mousePressed(MouseEvent click) {
-                // draw new cards and reset player hands
-                LowCardGame.takeCard(0);
-                LowCardGame.takeCard(1);
-                renderHand(playerHand, computerHand, humanLabels, computerLabels, myCardTable);
-            }
-        });*/
 
         // and two random cards in the play region (simulating a computer/hum ply)
         // code goes here ...
         myCardTable.pnlPlayArea.add(playerCardLabel);
         myCardTable.pnlPlayArea.add(computerCardLabel);
         myCardTable.pnlPlayArea.add(playerLabel);
-
-
-        
         myCardTable.pnlPlayArea.add(computerLabel);
 
         // show everything to the user
         myCardTable.setVisible(true);
     }
 
+    public static void clearHand(Hand playerHand) {
+        for (int i = 0; i < 7; i++) {
+            humanLabels[i].setIcon(null);
+        }
+    }
+    
+    private static void gameOver(ScoreCard scoreCard)
+    {
+       String results = "";
+       if (scoreCard.getPlayerScore() < scoreCard.getComputerScore())
+    	   results = "You lose!";
+       else if(scoreCard.getPlayerScore() > scoreCard.getComputerScore())
+    	   results = "You win!";
+       else
+    	   results = "The game is tied!";
+
+       results += "\n Player: " + scoreCard.getPlayerScore() + ", Computer: " + scoreCard.getComputerScore();
+       JOptionPane.showMessageDialog(null, results);
+       System.exit(0);
+    }
+
     public static void renderHand(Hand playerHand, Hand computerHand, JLabel[] humanLabels, JLabel[] computerLabels,
             CardTable myCardTable) {
         myCardTable.pnlHumanHand.removeAll();
-        myCardTable.pnlHumanHand.revalidate();
         myCardTable.pnlComputerHand.removeAll();
+        myCardTable.pnlHumanHand.revalidate();
         myCardTable.pnlComputerHand.revalidate();
 
         for (int i = 0; i < playerHand.getNumCards(); i++) {
@@ -180,19 +150,14 @@ public class Assign5 {
             myCardTable.pnlComputerHand.add(computerLabels[i], JLabel.CENTER);
 
             // set the icon for player card
-            humanLabels[i].setIcon(null);
             humanLabels[i].setIcon(GUICard.getIcon(playerHand.inspectCard(i)));
             myCardTable.pnlHumanHand.add(humanLabels[i], JLabel.CENTER);
         }
     }
 
-    // reset board - add new cards to each hand
-    public static void resetGame() {
-
-    }
-
     public static boolean playRound(Card playerCard, Card computerCard) {
-        return playerCard.getValue() < computerCard.getValue();
+        Card[] playedCards = Card.arraySort(new Card[]{playerCard, computerCard}, 2);
+        return playerCard.value == playedCards[0].value;
     }
 
     // find the lowest card in the computer's hand
@@ -273,36 +238,38 @@ class CardTable extends JFrame {
         TitledBorder playerBorderTitle = BorderFactory.createTitledBorder("Player Hand");
         TitledBorder playAreaBorderTitle = BorderFactory.createTitledBorder("Play Area");
         TitledBorder computerBorderTitle = BorderFactory.createTitledBorder("Computer Hand");
-        TitledBorder scoreBorderTitle = BorderFactory.createTitledBorder("Score Board");
+        TitledBorder scoreBoardBorderTitle = BorderFactory.createTitledBorder("Score Board");
 
         FlowLayout plyHandLayout = new FlowLayout();
         FlowLayout cmpHandLayout = new FlowLayout();
-        GridLayout scoreLayout = new GridLayout(1, 3);
         GridLayout playAreaLayout = new GridLayout(2, 2);
+        GridLayout cmpScoreLayout = new GridLayout(1, 3);
 
         pnlComputerHand.setLayout(cmpHandLayout);
         pnlHumanHand.setLayout(plyHandLayout);
         pnlPlayArea.setLayout(playAreaLayout);
-        pnlScoreBoard.setLayout(scoreLayout);
+        pnlScoreBoard.setLayout(cmpScoreLayout);
 
         pnlPlayArea.setBorder(playAreaBorderTitle);
         pnlHumanHand.setBorder(playerBorderTitle);
         pnlComputerHand.setBorder(computerBorderTitle);
-        pnlScoreBoard.setBorder(scoreBorderTitle);
+        pnlScoreBoard.setBorder(scoreBoardBorderTitle);
 
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 
         pnlComputerHand.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pnlComputerHand.setPreferredSize(new Dimension(50, 80));
-
+        pnlComputerHand.setPreferredSize(new Dimension(50, 70));
         pnlHumanHand.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pnlHumanHand.setPreferredSize(new Dimension(50, 80));
+        pnlHumanHand.setPreferredSize(new Dimension(50, 70));
+        pnlScoreBoard.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnlScoreBoard.setPreferredSize(new Dimension(50, 10));
+        pnlPlayArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnlPlayArea.setPreferredSize(new Dimension(50, 150));
 
         this.add(pnlComputerHand);
         this.add(pnlPlayArea);
         this.add(pnlHumanHand);
         this.add(pnlScoreBoard);
-
     }
 
     public int getNumCardsPerHand() {
@@ -438,6 +405,9 @@ class GUICard {
     }
 
     static public Icon getIcon(Card card) {
+    	if (card.errorFlag == true) {
+    		return null;
+    	}
         return iconCards[valueAsInt(card)][suitAsInt(card)];
     }
 
@@ -520,7 +490,7 @@ class Card {
         return false;
     }
 
-    static void arraySort(Card[] cards, int arraySize) {
+    static Card[] arraySort(Card[] cards, int arraySize) {
         Card temp;
 
         for (int i = 0; i < arraySize; i++) {
@@ -535,6 +505,7 @@ class Card {
                 }
             }
         }
+        return cards;
     }
 }
 
@@ -640,7 +611,6 @@ class Deck {
     private static Card[] masterPack;
     private Card[] cards = new Card[MAX_CARDS];
     private int topCard;
-    int numPacks;
 
     // Constructor that populates the Card array
     public Deck(int numPacks) {
@@ -656,10 +626,6 @@ class Deck {
 
     // Re-populates cards[] with the designated number of packs of cards
     public void init(int numPacks) {
-        //validates number of backs
-        if(numPacks < 1 || numPacks > 6){
-            this.numPacks = numPacks;
-        }
         // Find total number of cards
         topCard = (56 * numPacks);
         if (topCard <= MAX_CARDS) {
@@ -722,28 +688,6 @@ class Deck {
         return card;
     }
 
-    //Add a card to the deck and reassigns top card
-  /*  public boolean addCard(Card card){
-        int numOfInstance = 0;
-
-        //check number of card instances
-        for (int i = 0; i < cards.length-1; i++){
-            if (cards[i].equals(card)){
-                numOfInstance ++;
-            }
-        }
-        if(numPacks > numOfInstance ){
-            return false;
-        }
-
-        if (cards.length >= topCard) {
-            topCard++;
-            cards[topCard-1] = card;
-
-            return true;
-        }
-        return false;
-    }*/
     public boolean addCard(Card card) {
 
         if (cards.length > topCard) {
@@ -753,38 +697,17 @@ class Deck {
         return false;
     }
 
-    //Removes a card from a deck and reassign top card
-    public boolean removeCard(Card card){
-        Card temp;
-        int numOfInstance = 0;
-
-        //counts the number of instances of a card
-        for (int i = 0; i < cards.length-1; i++){
-            if (cards[i].equals(card)){
-                numOfInstance ++;
-            }
+    public boolean removeCard(Card card) {
+        for (Card cardss : cards) {
         }
-        //returns false if the card isnt found in the deck
-        if(numOfInstance == 0 ){
-            return false;
-        }
-
-        //removes card from deck and reassign topCard
         for (int i = 0; i < cards.length; i++) {
-
             if (cards[i].equals(card)) {
-                for(int j = i; j < cards.length-1; j++){
-                    temp = cards[j];
-                    cards[j] = cards[j+1];
-                    cards[j+1] = temp;
-                }
-              cards[topCard-1] = null;
-              topCard--;
+                cards[i] = cards[topCard - 1];
 
+                topCard--;
                 return true;
             }
         }
-
         return false;
     }
 
