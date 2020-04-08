@@ -84,6 +84,10 @@ public class Assignment5 {
                     LowCardGame.sortHands();
                     clearHand(playerHand);
                     renderHand(playerHand, computerHand, humanLabels, computerLabels, myCardTable);
+
+                    if (playerHand.getNumCards() == 0) {
+                        gameOver(scoreCard);
+                    }
                 }
             });
         }
@@ -107,6 +111,20 @@ public class Assignment5 {
             } catch (Exception e) {
             }
         }
+    }
+
+    private static void gameOver(ScoreCard scoreCard) {
+        String results = "";
+        if (scoreCard.getPlayerScore() < scoreCard.getComputerScore())
+            results = "You lose!";
+        else if (scoreCard.getPlayerScore() > scoreCard.getComputerScore())
+            results = "You win!";
+        else
+            results = "The game is tied!";
+
+        results += "\n Player: " + scoreCard.getPlayerScore() + ", Computer: " + scoreCard.getComputerScore();
+        JOptionPane.showMessageDialog(null, results);
+        System.exit(0);
     }
 
     public static void renderHand(Hand playerHand, Hand computerHand, JLabel[] humanLabels, JLabel[] computerLabels,
